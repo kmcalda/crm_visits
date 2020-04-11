@@ -2,8 +2,8 @@
 {
     'name': "Visits",
     'summary': """
-        Visits module for CRM""",
-    'website': 'https://github.com/kmcalda/custom_module',
+        Track activities""",
+    'website': 'https://github.com/kmcalda/crm_visits',
     'author': "Kevin Marvin Calda",
     'category': 'Extra tool',
     'version': '0.1',
@@ -13,8 +13,9 @@
         'crm',
     ],
     'data': [
-        'views/visits_menu.xml',
-        'views/visits_menu.xml',
+        'views/visit_view.xml',
+        'views/lead_view.xml',
+        'security/ir.model.access.csv',
     ],
     'application': True,
     'installation': True,
