@@ -6,6 +6,7 @@
         <field name="model">crm.visits</field>
         <field name="arch" type="xml">
             <form string="Visits Form">
+        <!--    For buttons and status bar  -->
                 <header>
                     <button name="action_check_in" type="object" string="Check-in" class="oe_highlight"
                             attrs="{'invisible':['|','|', '|',('id' , '=' , False),('state', '=', 'check-out'),
@@ -15,17 +16,21 @@
                     <button name="action_cancel" type="object" string="Cancel" class="oe_highlight"
                             attrs="{'invisible':['|','|', ('id','=', False) ,('state', '=' , 'cancelled'),
                             ('state', '=', 'complete')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="check-in,check-out,complete"/>
+                    <field name="state" widget="statusbar" statusbar_visible="check-in,check-out,complete"
+                           attrs="{'invisible': [('id', '=', False)]}"/>
                 </header>
                 <sheet>
+                <!--     web-ribbon for complete and cancelled    -->
                     <widget name="web_ribbon" title="Complete" attrs="{'invisible': [('state', '!=', 'complete')]}"/>
                     <widget name="web_ribbon" title="Cancelled" bg_color="bg-danger"
                             attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
+
                     <div class="oe_title">
                         <label for="itinerary" class="oe_edit_only"/>
                         <h1><field name="itinerary" placeholder="e.g Sample Project"
                                    attrs="{'readonly': ['|', ('state', '=', 'complete'),
-                                   ('state', '=', 'cancelled')]}" context="{'default_itinerary': 'active_id'}"/></h1>
+                                   ('state', '=', 'cancelled')]}" context="{'default_itinerary': 'active_id'}"
+                                   options="{'no_create':True}"/></h1>
                     </div>
                     <group>
                         <group>
@@ -93,14 +98,12 @@
         </field>
     </record>
 
-
-
-<!-- Create abstract form and tree view   -->
+    <!-- Create abstract form and tree view   -->
     <record model="ir.actions.act_window" id="visits_view">
         <field name="name">Visits</field>
         <field name="res_model">crm.visits</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_my_visit":1}</field>
+<!--        <field name="context">{"search_default_my_visit":1}</field> &lt;!&ndash; define default search&ndash;&gt;-->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create Visit
             </p>
@@ -118,14 +121,31 @@
                 <field name="itinerary"/>
                 <field name="salesman"/>
                 <separator/>
-                <filter string="My Visits" name="my_visit" domain="[('salesman','=',uid)]"/>
+<!--                <filter string="My Visits" name="my_visit" domain="[('salesman','=',uid)]"/>-->
             </search>
         </field>
     </record>
 
+    <!-- Create menu for visits inside CRM root  -->
     <menuitem id="visits_menu"
               name="Visits"
               action="visits_view"
               parent="crm.crm_menu_root"
+              groups="sales_team.group_sale_manager"
               sequence="6"/>
+
+    <!--    Insert smart-button for visits inside crm.lead form -->
+    <record id="crm_lead_smart_button" model="ir.ui.view">
+        <field name="name">crm.lead.smart.button</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="crm_visits_smart_button" type="object" class="oe_stat_button"
+                        icon="fa-briefcase">
+                <field name="visit_count" string="Visits" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
 </odoo>

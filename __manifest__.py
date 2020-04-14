@@ -11,10 +11,13 @@
     'sequence': 10,
     'depends': [
         'crm',
+        'sale_management',
+        'contacts',
     ],
     'data': [
         'views/visit_view.xml',
-        'views/lead_view.xml',
+        'views/custom_views.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
     ],
     'application': True,
